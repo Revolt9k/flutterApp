@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "489403686518",
+    "project_id": "sport-e604c",
+    "storage_bucket": "sport-e604c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489403686518:android:1e102692ae1c2a5cb40957",
+        "android_client_info": {
+          "package_name": "com.example.flutter_hello"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489403686518-9tsgeslik4rf07egrjsf9o1jukeebh0q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoLRyKVKqJ8Yc7XiH-x5Xspj833M4W9IE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489403686518-9tsgeslik4rf07egrjsf9o1jukeebh0q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
