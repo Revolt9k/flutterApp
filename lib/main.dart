@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello/infoPage.dart';
+import 'package:flutter_hello/profilePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const String profileNameKey = 'PROFILE_NAME';
 
 void main() {
-  runApp(const MyApp());
+  _prepareAndRun();
+}
+
+Future<void> _prepareAndRun() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final profileName = prefs.getString(profileNameKey);
+
+  return runApp(MyApp(profileName: profileName));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final String? profileName;
+
+  const MyApp({this.profileName, Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -24,12 +39,23 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'initialPage'),
+      routes: {
+        InfoPage.routeName: (BuildContext context) => const InfoPage(),
+        MyHomePage.routeName: (BuildContext context) => const MyHomePage(
+              title: 'initialPage',
+            ),
+        ProfilePage.routeName: (BuildContext context) => const ProfilePage(),
+      },
+      initialRoute:
+          profileName == null ? MyHomePage.routeName : ProfilePage.routeName,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  static const routeName = '/main';
+
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -48,68 +74,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      print(_controller.text);
+    });
+  }
+
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  Future<void> _goNext() async {
+    Navigator.of(context).pushNamed(InfoPage.routeName);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(profileNameKey, _controller.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Nasyka deneg podnimem budet kaif',
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Hero(
+                tag: 'text',
+                child: const Text(
+                  'Nasyka deneg podnimem budet kaif',
+                  style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.black,
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.normal),
+                ),
+              ),
             ),
-            Text(
-              '$_counter kilo roubles incoming',
-              style: Theme.of(context).textTheme.headline4,
+            Padding(
+              padding: const EdgeInsets.all(40),
+              child: TextField(
+                controller: _controller,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _goNext,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: const Icon(Icons.next_plan),
+      ),
     );
   }
 }
