@@ -1,7 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hello/googlePage.dart';
 import 'package:flutter_hello/infoPage.dart';
 import 'package:flutter_hello/profilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 const String profileNameKey = 'PROFILE_NAME';
 
@@ -14,8 +20,51 @@ Future<void> _prepareAndRun() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final profileName = prefs.getString(profileNameKey);
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+
+  // await signInWithGoogle();
+
   return runApp(MyApp(profileName: profileName));
 }
+
+
+// Future<UserCredential> signInWithGoogle() async {
+
+// //   GoogleSignIn _googleSignIn = GoogleSignIn(
+// //   scopes: [
+// //     'email',
+// //     'https://www.googleapis.com/auth/contacts.readonly',
+// //   ],
+// // );
+
+
+
+//   // Trigger the authentication flow
+//   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+//   // Obtain the auth details from the request
+//   final GoogleSignInAuthentication? googleAuth =
+//       await googleUser?.authentication;
+
+//   // Create a new credential
+//   final credential = GoogleAuthProvider.credential(
+//     accessToken: googleAuth?.accessToken,
+//     idToken: googleAuth?.idToken,
+//   );
+
+//   // Once signed in, return the UserCredential
+//   return await FirebaseAuth.instance.signInWithCredential(credential);
+// }
 
 class MyApp extends StatelessWidget {
   final String? profileName;
@@ -46,6 +95,7 @@ class MyApp extends StatelessWidget {
               title: 'initialPage',
             ),
         ProfilePage.routeName: (BuildContext context) => const ProfilePage(),
+        GooglePage.routeName: (BuildContext context) => const GooglePage(),
       },
       initialRoute:
           profileName == null ? MyHomePage.routeName : ProfilePage.routeName,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello/googlePage.dart';
 import 'package:flutter_hello/main.dart';
 import 'package:flutter_hello/profilePage.dart';
 
@@ -17,7 +18,7 @@ class _InfoPageState extends State<InfoPage> {
   }
 
     void _goNext() {
-    Navigator.of(context).pushNamed(ProfilePage.routeName);
+    Navigator.of(context).pushNamed(GooglePage.routeName);
   }
 
   @override
