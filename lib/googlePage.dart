@@ -6,13 +6,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
-  clientId: '489403686518-euupk91f12kp8ie8j91c944thhc2irac.apps.googleusercontent.com',
   scopes: <String>[
     'email',
     'https://www.googleapis.com/auth/contacts.readonly',
   ],
 );
-
 
 class GooglePage extends StatefulWidget {
   const GooglePage({Key? key}) : super(key: key);
